@@ -1,25 +1,76 @@
+<?php
+	$dbUsername = "root"; // Khai báo username
+	$dbPassword = "";      // Khai báo password
+	$serverName = "localhost";   // Khai báo server
+	$dbName = "mydatabase";      // Khai báo database
+	 
+	// Kết nối database
+	$conn = mysqli_connect($serverName , $dbUsername , $dbPassword , $dbName);
+	//Nếu kết nối bị lỗi thì xuất báo lỗi và thoát.
+	if (!$conn) {
+		die("Connection failed :" .mysqli_connect_error());
+	}
+	
+	//Khai báo giá trị ban đầu, nếu không có thì khi chưa submit câu lệnh insert sẽ báo lỗi
+	$name = '';
+	$email = '';
+	$phonenumber = '';
+	$schedule = '';
+	$giờ_khám ='';
+	 
+	//Lấy giá trị POST từ form vừa submit
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+		if (isset($_POST["post_name"])) {
+			$name = $_POST['post_name'];
+		}
+		if (isset($_POST["email"])) {
+			$email = $_POST['email'];
+		}
+		if (isset($_POST["phonenumber"])) {
+			$phonenumber = $_POST['phonenumber'];
+		}
+		if (isset($_POST["schedule"])) {
+			$schedule  = $_POST['schedule'];
+		}
+		if (isset($_POST["time"])) {
+			$time = $_POST['time'];
+		}
+		if (isset($_POST["address"])) {
+			$address  = $_POST['address'];
+		}
+		if (isset($_POST["problem"])) {
+			$problem  = $_POST['problem'];
+		}
+	//insert dữ liệu vào database table
+		$sql = "INSERT INTO posts (post_name, author)
+							VALUES ('{$name}', '{$email}', '{$phonenumber}', '{$schedule}', '{$time}', '{$address}', '{$problem}')";
+	 
+		if ($connect->query($sql) === TRUE) {
+			echo "Success";
+		} else {
+			echo "Error: " . $sql . "<br>" . $connect->error;
+		}
+	}
+	//Đóng database
+	$connect->close();
+?>
 <!DOCTYPE html>
 <html>
-<head>
+<head >
 	<meta charset="utf-8">
-	<title>Animal rescue page</title>
+	<title>Hẹn lịch khám</title>
 	<link rel="stylesheet" type="text/css" href="Anistyle.css">
 	<script src="https://kit.fontawesome.com/6854c68889.js" crossorigin="anonymous"></script>
-	<style>
-        a {
-            color: hotpink;
-        }
-    </style>
-</head>
-<body>
+	</head>
+	<body>
 	<h1 class="logo">
-     		<i class="fas fa-dog"></i>
-     		Animal Shelter
+     	<i class="fas fa-dog"></i>
+     	Animal Shelter
     </h1>
 	<div class="help_card container_center">
-		<h2> Hệ thống chi nhánh bệnh viện thú y </h2><br>
+		<h2> Hệ thống cơ sở thú y </h2><br>
 		
-		<h3> Tại Hà Nội </h3><br>
+		<h3> Hà Nội </h3><br>
 		
 		<p> 1. PETHEALTH ÂU CƠ: 240 Âu Cơ, Tây Hồ, Hà Nội <p>
 		<p> <a href ="https://www.facebook.com/pethealthaucohn" >Facebook </a> </p> 
@@ -37,21 +88,52 @@
 		<p> <a href =" https://www.facebook.com/Benhvienthuymydinh"> Facebook</a> </p> 
 		<p> 8. PETHEALTH THANH XUÂN: 192 Nguyễn Xiển, Thanh Xuân, Hà Nội </p>
 		<p> <a href ="https://www.facebook.com/BenhvienthuyThanhxuan" >Facebook </a> </p> 
-		
-		<h3> Tại Bắc Giang </h3><br>
-		<p> 1. PETHEALTH BẮC GIANG: Số 25 Ngô Văn Cảnh, Hoàng Văn Thụ, Tp Bắc Giang</p>
-		<p> <a href = "https://www.facebook.com/PetHealthBacGiang"> Facebook </a> </p>
-		
-		<h3> Tại Bắc Ninh </h3><br>
-		<p> 1. PETHEALTH BẮC NINH: Thửa 47, Tạ Quang Bửu, TP Bắc Ninh</p> 
-		<p> <a href = "https://www.facebook.com/Benhvienthuybacninh"> Facebook </a> </p> 
-		<p> 2. PETHEALTH TỪ SƠN: Số 37 Phố mới, Đình Bảng, TX Từ Sơn, Bắc Ninh</p>
-		<p> <a href = "https://www.facebook.com/benhvienthuypethelathtuson"> Facebook </a></p>
-		
-		<h3> Tại Hải Phòng </h3> <br>
-		<p> 1. PETHEALTH HẢI PHÒNG: 300 Lạch Tray, Ngô Quyền, Hải Phòng</p>
-		<p> <a href = "https://www.facebook.com/pethealthhaiphong"> Facebook </a> </p> 
+	
 	</div>
+	<h2> Đặt lịch hẹn khám  </h2>
+	<form action = "" method = "POST" >
+     	
+		<div class="form_row">
+     		<input type="text" id="name" name = "post_name">
+     		<label for="name">Họ và tên </label>
+     	</div>
+     	<div class="form_row">
+     		<input type="email" id="email" name ="email">
+     		<label for="email">Email</label>
+     	</div>
+     	<div class="form_row">
+     		<input type="number" id="phone" name ="phonenumber">
+     		<label for="phone">Số điện thoại</label>
+     	</div>
+		<div class = "form_row">
+			<input type="date" id="date" name = "schedule"> </br>
+			<label for="date"> Ngày khám  </label>
+		</div>
+		<div class = "form_row">
+			<input type="time" id="time" name = "time"> 
+			<label for="time"> Giờ khám  </label> </br>
+		</div>
+		
+		<label for="address">Chọn địa chỉ phòng khám:</label>
+		<select id = "Address" name = "address">
+		  <option value="cơ sở 1">PETHEALTH ÂU CƠ</option>
+		  <option value="cơ sở 2">PETHEALTH BẮC TỪ LIÊM</option>
+		  <option value="cơ sở 3">PETHEALTH ĐỐNG ĐA</option>
+		  <option value="cơ sở 4">PETHEALTH HÀ ĐÔNG</option>
+		  <option value="cơ sở 5">PETHEALTH HAI BÀ TRƯNG</option>
+		  <option value="cơ sở 6">PETHEALTH HOÀNG MAI</option>
+		  <option value="cơ sở 7">PETHEALTH MỸ ĐÌNH</option
+		  <option value="cơ sở 8">PETHEALTH THANH XUÂN</option>
+		</select>
+		
+		<div class="form_row" name =""problem>	
+			<textarea id="textarea" cols="30"
+			rows="10" placeholder="Viết vấn đề của thú cưng tại đây"></textarea>
+			<button  type="submit" > Gửi  </button>
+						
+     	</div>
+	</form>
+	 
 	<footer>
      	<div class="footer_cont center_row">
      		<p>2021 &copy Animal Rescue</p>
